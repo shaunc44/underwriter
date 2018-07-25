@@ -24,7 +24,7 @@ class RentSerializer(serializers.HyperlinkedModelSerializer):
             'vacancy',
             'bedrooms',
             'bathrooms',
-            'annual_total'
+            'annual_rent'
         )
 
 class ExpenseSerializer(serializers.HyperlinkedModelSerializer):
@@ -36,7 +36,8 @@ class ExpenseSerializer(serializers.HyperlinkedModelSerializer):
             'taxes',
             'insurance',
             'repairs',
-            'administration'
+            'administration',
+            'annual_expense'
         )
 
 

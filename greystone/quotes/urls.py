@@ -4,5 +4,5 @@ from quotes import views
 
 
 urlpatterns = [
-    path('', views.display_quotes, name='quotes'),
+    path('quote/', views.LoanAmountView.as_view(), name='quote'),
 ]

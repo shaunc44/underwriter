@@ -27,6 +27,7 @@ router.register(r'address', views.AddressViewSet)
 router.register(r'rent', views.RentViewSet)
 router.register(r'expense', views.ExpenseViewSet)
 router.register(r'caprate', views.CapRateViewSet)
+# router.register(r'quote', views.LoanAmountViewSet, 'loan')
 
 
 urlpatterns = [

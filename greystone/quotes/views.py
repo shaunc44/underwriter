@@ -4,6 +4,7 @@ from quotes.serializers import AddressSerializer, RentSerializer
 from quotes.serializers import ExpenseSerializer, CapRateSerializer
 
 from rest_framework.renderers import JSONRenderer
+from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from quotes.models import Address, Rent, Expense, CapRate
@@ -11,7 +12,7 @@ from quotes.models import Address, Rent, Expense, CapRate
 
 class AddressViewSet(viewsets.ModelViewSet):
     """
-    API endpoint that allows Addresss to be viewed or edited.
+    API endpoint that allows Addresses to be viewed or edited.
     """
     queryset = Address.objects.all()
     serializer_class = AddressSerializer
@@ -50,16 +51,23 @@ class LoanAmountView(APIView):
     """
     A view that returns the loan amount in JSON.
     """
-    renderer_classes = (JSONRenderer, )
+    # pass
+    # renderer_classes = (JSONRenderer, )
+    # renderer_classes = [TemplateHTMLRenderer]
+    # template_name = 'quote.html'
 
     def get(self, request, format=None):
-        noi = Rent.objects.filter(annual_total) - Expense.objects.filter()
-        value = noi / CapRate.objects.filter()
-        debt_rate = 0.0295 + 0.02
-        debt_pmt = debt_rate * loan_proceeds # ???
-        present_value = payoff / (1+debt_rate)**num_pmts
-        content = {'loan_amount': loan_amount}
-        return Response(content)
+
+        annual_bldg_rent = Rent.calc_bldg_rent(request)
+
+        # noi = Rent.objects.filter(annual_rent) - Expense.objects.filter()
+        # value = noi / CapRate.objects.filter()
+        # debt_rate = 0.0295 + 0.02
+        # debt_pmt = debt_rate * loan_proceeds # ???
+        # present_value = payoff / (1+debt_rate)**num_pmts
+        # content = {'loan_amount': loan_amount}
+        # return Response(content)
+        return Response({'building_rent': annual_bldg_rent})
 
 
 class LoanAmountView(APIView):

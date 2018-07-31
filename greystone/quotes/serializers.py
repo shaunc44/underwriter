@@ -1,4 +1,4 @@
-from quotes.models import Address, Rent, Expense, CapRate
+from quotes.models import Address, Rent, Expense, CapRate, Result
 
 from rest_framework import serializers
 
@@ -47,6 +47,17 @@ class CapRateSerializer(serializers.HyperlinkedModelSerializer):
         fields = (
             'address',
             'cap_rate'
+        )
+
+
+class ResultSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Result
+        fields = (
+            'address',
+            'loan_amount',
+            'debt_rate',
+            'annual_building_rent'
         )
 
 

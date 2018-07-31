@@ -2,12 +2,20 @@ from quotes.models import Address, Rent, Expense, CapRate
 from rest_framework import viewsets
 from quotes.serializers import AddressSerializer, RentSerializer
 from quotes.serializers import ExpenseSerializer, CapRateSerializer
+from quotes.serializers import ResultSerializer
 
-from rest_framework.renderers import JSONRenderer
-from rest_framework.renderers import TemplateHTMLRenderer
-from rest_framework.response import Response
+# from rest_framework.renderers import JSONRenderer
+# from rest_framework.renderers import TemplateHTMLRenderer
+from quotes.models import Address, Rent, Expense, CapRate, Result
+
+from django.http import Http404
 from rest_framework.views import APIView
-from quotes.models import Address, Rent, Expense, CapRate
+from rest_framework.response import Response
+from rest_framework import status
+from rest_framework import generics
+from rest_framework.reverse import reverse
+from rest_framework.decorators import api_view
+from rest_framework.reverse import reverse
 
 
 class AddressViewSet(viewsets.ModelViewSet):
@@ -42,39 +50,126 @@ class CapRateViewSet(viewsets.ModelViewSet):
     serializer_class = CapRateSerializer
 
 
+class ResultDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Result.objects.all()
+    serializer_class = ResultSerializer
+
+    def post(self, request, format=None):
+        serializer = ResultSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['GET'])
+def api_root(request, format=None):
+    return Response({
+        # 'users': reverse('user-list', request=request, format=format),
+        'results': reverse('snippet-list', request=request, format=format)
+    })
+
+# class ResultDetail(APIView):
+#     """
+#     Create, retrieve, update or delete a Result instance.
+#     """
+#     queryset = CapRate.objects.all()
+#     serializer_class = CapRateSerializer
+
+#     def post(self, request, format=None):
+#         serializer = ResultSerializer(data=request.data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data, status=status.HTTP_201_CREATED)
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+#     def get_object(self, pk):
+#         try:
+#             return Result.objects.get(pk=pk)
+#         except Result.DoesNotExist:
+#             raise Http404
+
+#     def get(self, request, pk, format=None):
+#         result = self.get_object(pk)
+#         serializer = ResultSerializer(result)
+#         return Response(serializer.data)
+
+#     def put(self, request, pk, format=None):
+#         result = self.get_object(pk)
+#         serializer = ResultSerializer(result, data=request.data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data)
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+#     def delete(self, request, pk, format=None):
+#         result = self.get_object(pk)
+#         result.delete()
+#         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+
+
+# class ResultViewSet(viewsets.ModelViewSet):
+#     """
+#     API endpoint that allows Quotes to be viewed or edited.
+#     """
+#     queryset = Result.objects.all()
+#     serializer_class = ResultSerializer
+
+
+# class ResultList(APIView):
+#     """
+#     List all results, or create a new result.
+#     """
+#     def get(self, request, format=None):
+#         results = Result.objects.all()
+#         serializer = ResultSerializer(results, many=True)
+#         return Response(serializer.data)
+
+#     def post(self, request, format=None):
+#         serializer = ResultSerializer(data=request.data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data, status=status.HTTP_201_CREATED)
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+
 """
 I need to work on the classes below. Ideally I would like to 
 return the outputs from these views 
 (maybe calculations should occur in the models => fat models, skinny views)
 """
-class LoanAmountView(APIView):
-    """
-    A view that returns the loan amount in JSON.
-    """
+# class LoanAmountView(APIView):
+"""
+A view that returns the loan amount in JSON.
+"""
     # pass
     # renderer_classes = (JSONRenderer, )
     # renderer_classes = [TemplateHTMLRenderer]
     # template_name = 'quote.html'
 
-    def get(self, request, format=None):
+#     def get(self, request, format=None):
 
-        annual_bldg_rent = Rent.calc_bldg_rent(request)
+#         annual_bldg_rent = Rent.calc_bldg_rent(request)
 
-        # noi = Rent.objects.filter(annual_rent) - Expense.objects.filter()
-        # value = noi / CapRate.objects.filter()
-        # debt_rate = 0.0295 + 0.02
-        # debt_pmt = debt_rate * loan_proceeds # ???
-        # present_value = payoff / (1+debt_rate)**num_pmts
-        # content = {'loan_amount': loan_amount}
-        # return Response(content)
-        return Response({'building_rent': annual_bldg_rent})
+#         # noi = Rent.objects.filter(annual_rent) - Expense.objects.filter()
+#         # value = noi / CapRate.objects.filter()
+#         # debt_rate = 0.0295 + 0.02
+#         # debt_pmt = debt_rate * loan_proceeds # ???
+#         # present_value = payoff / (1+debt_rate)**num_pmts
+#         # content = {'loan_amount': loan_amount}
+#         # return Response(content)
+#         return Response({'building_rent': annual_bldg_rent})
 
 
-class LoanAmountView(APIView):
-    pass
-    """
-    A view that returns the debt rate in JSON.
-    """
+# class LoanAmountView(APIView):
+#     pass
+"""
+A view that returns the debt rate in JSON.
+"""
     # renderer_classes = (JSONRenderer, )
 
     # def get(self, request, format=None):
@@ -82,10 +177,6 @@ class LoanAmountView(APIView):
     #     value = noi / CapRate.objects.filter()
     #     content = {'user_count': user_count}
     #     return Response(content)
-
-
-
-
 
 
 # from django.shortcuts import render

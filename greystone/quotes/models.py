@@ -69,11 +69,6 @@ class Rent(models.Model):
     def annual_rent(self):
         return self.monthly_rent * 12
 
-    def calc_bldg_rent(self):
-        monthly_bldg_rent = Rent.objects.filter(address=address).aggregate(Sum('monthly_rent'))
-        annual_bldg_rent = monthly_bldg_rent * 12
-        return annual_bldg_rent
-
 
 class Expense(models.Model):
     """
@@ -120,9 +115,9 @@ class CapRate(models.Model):
     )
 
 
-class Estimate(models.Model):
+class Result(models.Model):
     """
-    Cap rate for the commercial property
+    Quotes for the commercial property entered
     """
     address = models.OneToOneField(
         Address,
@@ -131,12 +126,21 @@ class Estimate(models.Model):
     )
     loan_amount = models.PositiveIntegerField(
         "loan Amount",
+        default=0,
     )
     debt_rate = models.PositiveIntegerField(
         "debt Rate",
+        default=0,
     )
 
-    get noi(self):
+    @property
+    def annual_building_rent(self):
+        monthly_bldg_rent = Rent.objects.filter(address=address).aggregate(Sum('monthly_rent'))
+        annual_bldg_rent = monthly_bldg_rent * 12
+        return annual_bldg_rent
+
+    def get_noi(self):
+        pass
 
 
 

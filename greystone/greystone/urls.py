@@ -15,9 +15,11 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.urls import re_path
 from django.urls import include
 
 from rest_framework import routers
+from rest_framework.urlpatterns import format_suffix_patterns
 
 from quotes import views
 
@@ -27,7 +29,7 @@ router.register(r'address', views.AddressViewSet)
 router.register(r'rent', views.RentViewSet)
 router.register(r'expense', views.ExpenseViewSet)
 router.register(r'caprate', views.CapRateViewSet)
-# router.register(r'quote', views.LoanAmountViewSet, 'loan')
+# router.register(r'result', views.ResultViewSet))
 
 
 urlpatterns = [
@@ -41,5 +43,19 @@ urlpatterns = [
     ),
     path('api-auth/', 
         include('rest_framework.urls')
-    )
+    ),
+    # path(
+    #     'results/', 
+    #     views.ResultList.as_view()
+    # ),
+    re_path(
+        r'^results/(?P<pk>[0-9]+)/$', 
+        views.ResultDetail.as_view()
+    ),
 ]
+
+# urlpatterns = format_suffix_patterns(urlpatterns)
+
+
+
+

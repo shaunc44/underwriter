@@ -9,28 +9,67 @@ from rest_framework.renderers import TemplateHTMLRenderer
 from quotes.models import Address, Rent, Expense, CapRate, Result
 
 from django.shortcuts import get_object_or_404
+from django.shortcuts import redirect
 from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import generics
 from rest_framework.reverse import reverse
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, list_route, detail_route
 from rest_framework.reverse import reverse
+# from rest_framework.decorators import action
+from django.db.models.query import QuerySet
 
 
-class AddressViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint that allows Addresses to be viewed or edited.
-    """
-    queryset = Address.objects.all().order_by('street')
-    serializer_class = AddressSerializer
-    template_name = 'quotes/address.html'
+class AddressList(APIView):
+    renderer_classes = [TemplateHTMLRenderer]
 
-    @list_route(renderer_classes=[renderers.TemplateHTMLRenderer])
-    def blank_form(self, request, *args, **kwargs):
-        serializer = AddressSerializer()
-        return Response({'serializer': serializer})
+    def get(self, request):
+        queryset = Address.objects.all()
+        return Response(
+            {'address_list': queryset},
+            template_name = 'quotes/address_list.html', 
+        )
+
+
+class AddressDetail(APIView):
+    renderer_classes = [TemplateHTMLRenderer]
+    # template_name = 'address_detail.html'
+
+    def get(self, request, pk):
+        address = get_object_or_404(Address, pk=pk)
+        serializer = AddressSerializer(address)
+        return Response(
+            {'serializer': serializer, 'address': address},
+            template_name = 'quotes/address_detail.html'
+        )
+
+    def post(self, request, pk):
+        address = get_object_or_404(Address, pk=pk)
+        serializer = AddressSerializer(address, data=request.data)
+        if not serializer.is_valid():
+            return Response(
+                {'serializer': serializer, 'address': address},
+                template_name = 'quotes/address_detail.html'
+            )
+        serializer.save()
+        return redirect('address_list')
+
+
+# class AddressViewSet(viewsets.ModelViewSet):
+#     """
+#     API endpoint that allows Addresses to be viewed or edited.
+#     """
+#     queryset = Address.objects.all().order_by('street')
+#     serializer_class = AddressSerializer
+#     template_name = 'quotes/address.html'
+
+#     @list_route(renderer_classes=[TemplateHTMLRenderer])
+#     def blank_form(self, request, *args, **kwargs):
+#         # address = get_object_or_404(Address)
+#         serializer = AddressSerializer()
+#         return Response({'serializer': serializer})
 
 
 class RentViewSet(viewsets.ModelViewSet):
@@ -39,7 +78,13 @@ class RentViewSet(viewsets.ModelViewSet):
     """
     queryset = Rent.objects.all().order_by('address')
     serializer_class = RentSerializer
-    template_name = 'quotes/input.html'
+    template_name = 'quotes/rent.html'
+
+    @list_route(renderer_classes=[TemplateHTMLRenderer])
+    def blank_form(self, request, *args, **kwargs):
+        # address = get_object_or_404(Address)
+        serializer = RentSerializer()
+        return Response({'serializer': serializer})
 
 
 class ExpenseViewSet(viewsets.ModelViewSet):

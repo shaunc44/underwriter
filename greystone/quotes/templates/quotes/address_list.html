@@ -1,0 +1,15 @@
+{% load rest_framework %}
+
+<html>
+<body>
+
+<h1>Addresses</h1>
+
+<ul>
+    {% for address in address_list %}
+    <li>{{ address.street }}</li>
+    {% endfor %}
+</ul>
+
+</body>
+</html>

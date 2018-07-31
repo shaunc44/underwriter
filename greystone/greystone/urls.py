@@ -25,7 +25,7 @@ from quotes import views
 
 
 router = routers.DefaultRouter()
-router.register(r'address', views.AddressViewSet)
+# router.register(r'address', views.AddressViewSet)
 router.register(r'rent', views.RentViewSet)
 router.register(r'expense', views.ExpenseViewSet)
 router.register(r'caprate', views.CapRateViewSet)
@@ -43,6 +43,16 @@ urlpatterns = [
     ),
     path('api-auth/', 
         include('rest_framework.urls')
+    ),
+    path(
+        'address/', 
+        views.AddressList.as_view(),
+        name='address_list'
+    ),
+    re_path(
+        r'^address/(?P<pk>[0-9]+)/$', 
+        views.AddressDetail.as_view(),
+        name='address_detail'
     ),
     path(
         'results/', 

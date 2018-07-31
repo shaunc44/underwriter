@@ -44,10 +44,11 @@ urlpatterns = [
     path('api-auth/', 
         include('rest_framework.urls')
     ),
-    # path(
-    #     'results/', 
-    #     views.ResultList.as_view()
-    # ),
+    path(
+        'results/', 
+        views.ResultList.as_view(),
+        name='results-list'
+    ),
     re_path(
         r'^results/(?P<pk>[0-9]+)/$', 
         views.ResultDetail.as_view()

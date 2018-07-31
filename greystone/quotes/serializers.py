@@ -57,7 +57,6 @@ class ResultSerializer(serializers.HyperlinkedModelSerializer):
             'address',
             'loan_amount',
             'debt_rate',
-            'annual_building_rent'
         )
 
 

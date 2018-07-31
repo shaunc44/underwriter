@@ -5,9 +5,10 @@ from quotes.serializers import ExpenseSerializer, CapRateSerializer
 from quotes.serializers import ResultSerializer
 
 # from rest_framework.renderers import JSONRenderer
-# from rest_framework.renderers import TemplateHTMLRenderer
+from rest_framework.renderers import TemplateHTMLRenderer
 from quotes.models import Address, Rent, Expense, CapRate, Result
 
+from django.shortcuts import get_object_or_404
 from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -22,44 +23,67 @@ class AddressViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows Addresses to be viewed or edited.
     """
-    queryset = Address.objects.all()
+    queryset = Address.objects.all().order_by('street')
     serializer_class = AddressSerializer
+    template_name = 'quotes/address.html'
+
+    @list_route(renderer_classes=[renderers.TemplateHTMLRenderer])
+    def blank_form(self, request, *args, **kwargs):
+        serializer = AddressSerializer()
+        return Response({'serializer': serializer})
 
 
 class RentViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows Rents to be viewed or edited.
     """
-    queryset = Rent.objects.all()
+    queryset = Rent.objects.all().order_by('address')
     serializer_class = RentSerializer
+    template_name = 'quotes/input.html'
 
 
 class ExpenseViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows Expenses to be viewed or edited.
     """
-    queryset = Expense.objects.all()
+    queryset = Expense.objects.all().order_by('address')
     serializer_class = ExpenseSerializer
+    template_name = 'quotes/input.html'
 
 
 class CapRateViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows CapRates to be viewed or edited.
     """
-    queryset = CapRate.objects.all()
+    queryset = CapRate.objects.all().order_by('address')
     serializer_class = CapRateSerializer
+    template_name = 'quotes/input.html'
+
+
+class ResultList(generics.ListCreateAPIView):
+    queryset = Result.objects.all().order_by('address')
+    serializer_class = ResultSerializer
+    template_name = 'quotes/output.html'
 
 
 class ResultDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Result.objects.all()
+    queryset = Result.objects.all().order_by('address')
     serializer_class = ResultSerializer
+    template_name = 'quotes/output.html'
 
-    def post(self, request, format=None):
-        serializer = ResultSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    # def post(self, request, format=None):
+    #     serializer = ResultSerializer(data=request.data)
+    #     if serializer.is_valid():
+    #         serializer.save()
+    #         return Response(serializer.data, status=status.HTTP_201_CREATED)
+    #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    @property
+    def annual_building_rent(self):
+        monthly_bldg_rent = Rent.objects.filter(address=address).aggregate(Sum('monthly_rent'))
+        annual_bldg_rent = monthly_bldg_rent * 12
+        return annual_bldg_rent
+
 
 
 @api_view(['GET'])

@@ -133,11 +133,11 @@ class Result(models.Model):
         default=0,
     )
 
-    @property
-    def annual_building_rent(self):
-        monthly_bldg_rent = Rent.objects.filter(address=address).aggregate(Sum('monthly_rent'))
-        annual_bldg_rent = monthly_bldg_rent * 12
-        return annual_bldg_rent
+    # @property
+    # def annual_building_rent(self):
+    #     monthly_bldg_rent = Rent.objects.filter(address=address).aggregate(Sum('monthly_rent'))
+    #     annual_bldg_rent = monthly_bldg_rent * 12
+    #     return annual_bldg_rent
 
     def get_noi(self):
         pass

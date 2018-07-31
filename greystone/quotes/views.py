@@ -56,6 +56,14 @@ class AddressDetail(APIView):
         serializer.save()
         return redirect('address_list')
 
+    def delete(self, request, pk):
+        address = get_object_or_404(Address, pk=pk)
+        address.delete()
+        return Response(
+            status=status.HTTP_204_NO_CONTENT,
+            template_name = 'quotes/address_list.html',
+        )
+
 
 # class AddressViewSet(viewsets.ModelViewSet):
 #     """

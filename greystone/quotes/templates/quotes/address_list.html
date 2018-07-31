@@ -13,3 +13,11 @@
 
 </body>
 </html>
+
+
+{% comment %}
+    <form action="{% url 'address_list' %}" method="DELETE" class=delete-address>
+        <input type=hidden value="{{ address.street }}" name=address_to_delete"></input>
+        <input type=submit value=Delete></input>
+    </form>
+{% endcomment %}

@@ -46,7 +46,7 @@ urlpatterns = [
     ),
     path(
         'address/', 
-        views.AddressList.as_view(),
+        views.AddressListView.as_view(),
         name='address_list'
     ),
     re_path(

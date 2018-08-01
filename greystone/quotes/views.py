@@ -11,6 +11,8 @@ from quotes.models import Address, Rent, Expense, CapRate, Result
 from django.shortcuts import get_object_or_404
 from django.shortcuts import redirect
 from django.http import Http404
+from django.http import HttpResponse
+from django.views.generic import ListView
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -22,15 +24,27 @@ from rest_framework.reverse import reverse
 from django.db.models.query import QuerySet
 
 
-class AddressList(APIView):
-    renderer_classes = [TemplateHTMLRenderer]
 
-    def get(self, request):
+class AddressListView(APIView):
+    model = Address
+
+    def get_queryset(self, *args, **kwargs):
         queryset = Address.objects.all()
-        return Response(
-            {'address_list': queryset},
-            template_name = 'quotes/address_list.html', 
+        # addresses = self.get_queryset()
+        return HttpResponse(
+            {'address_list': queryset}
         )
+
+
+# class AddressList(APIView):
+#     renderer_classes = [TemplateHTMLRenderer]
+
+#     def get(self, request):
+#         queryset = Address.objects.all()
+#         return Response(
+#             {'address_list': queryset},
+#             template_name = 'quotes/address_list.html', 
+#         )
 
 
 class AddressDetail(APIView):

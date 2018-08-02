@@ -45,15 +45,20 @@ urlpatterns = [
         include('rest_framework.urls')
     ),
     path(
-        'address/', 
+        'address-list/', 
         views.AddressListView.as_view(),
         name='address_list'
     ),
     re_path(
         r'^address/(?P<pk>[0-9]+)/$', 
-        views.AddressDetail.as_view(),
+        views.AddressDetailView.as_view(),
         name='address_detail'
     ),
+    # path(
+    #     'address/<int:pk>', 
+    #     views.AddressDetailView.as_view(),
+    #     name='address_detail'
+    # ),
     path(
         'results/', 
         views.ResultList.as_view(),

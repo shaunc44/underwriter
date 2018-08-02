@@ -1,23 +1,21 @@
+{% extends "quotes/base.html" %}
 {% load rest_framework %}
 
-<html>
-<body>
 
-<h1>Addresses</h1>
+{% block content %}
 
+<h1>Commercial Property Quotes</h1>
+
+{% if address_list %}
 <ul>
     {% for address in address_list %}
-    <li>{{ address.street }}</li>
+    <li>
+        <a href="{% url 'address_detail' address.pk %}">{{ address.street }}</a> ({{ address.state }})
+    </li>
     {% endfor %}
 </ul>
+{% else %}
+<p>There are no books in the library.</p>
+{% endif %}
 
-</body>
-</html>
-
-
-{% comment %}
-    <form action="{% url 'address_list' %}" method="DELETE" class=delete-address>
-        <input type=hidden value="{{ address.street }}" name=address_to_delete"></input>
-        <input type=submit value=Delete></input>
-    </form>
-{% endcomment %}
+{% endblock %}

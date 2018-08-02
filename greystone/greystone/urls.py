@@ -54,11 +54,11 @@ urlpatterns = [
         views.AddressDetailView.as_view(),
         name='address_detail'
     ),
-    # path(
-    #     'address/<int:pk>', 
-    #     views.AddressDetailView.as_view(),
-    #     name='address_detail'
-    # ),
+    path(
+        'address-create/', 
+        views.AddressCreateView.as_view(),
+        name='address_create'
+    ),
     path(
         'results/', 
         views.ResultList.as_view(),

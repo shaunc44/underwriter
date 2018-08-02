@@ -9,7 +9,7 @@
 {% if address_list %}
 <ul>
     {% for address in address_list %}
-    <li>
+    <li class="addy">
         <a href="{% url 'address_detail' address.pk %}">{{ address.street }}</a> ({{ address.state }})
     </li>
     {% endfor %}

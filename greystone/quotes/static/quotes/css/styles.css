@@ -1,12 +1,17 @@
 .sidebar-nav {
-    margin-top: 20px;
+    margin-top: 8vh;
     padding: 0;
     list-style: none;
+    /*list-style-type: decimal;*/
 }
 
 /*.col-sm-2 {
     margin-top: 40%;
 }*/
+
+.addy {
+    list-style-type: decimal;
+}
 
 
 

@@ -12,7 +12,7 @@
 
     <!-- Add additional CSS in static file -->
     {% load static %}
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'quotes/css/styles.css' %}">
 </head>
 
 <body>
@@ -23,7 +23,7 @@
                 <ul class="sidebar-nav">
                     <li><a href="{% url 'address_list' %}">Current Properties</a></li>
                     <li><a href="">Current Quotes</a></li>
-                    <li><a href="{% url 'address_list' %}">Create New Quote</a></li>
+                    <li><a href="{% url 'address_create' %}">Create New Quote</a></li>
                 </ul>
             {% endblock %}
             </div>

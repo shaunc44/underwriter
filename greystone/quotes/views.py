@@ -2,21 +2,25 @@ from quotes.models import (
     Address, Rent, Expense, CapRate
 )
 from quotes.serializers import (
-    AddressSerializer, RentSerializer
+    AddressSerializer, RentSerializer,
     ExpenseSerializer, CapRateSerializer, ResultSerializer
 )
+from quotes.models import (
+    Address, Rent, Expense, CapRate, Result
+)
+
 
 
 from rest_framework import viewsets
 # from rest_framework.renderers import JSONRenderer
 from rest_framework.renderers import TemplateHTMLRenderer
-from quotes.models import Address, Rent, Expense, CapRate, Result
 
 from django.shortcuts import get_object_or_404
 from django.shortcuts import redirect
 from django.http import Http404
 from django.http import HttpResponse
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, CreateView
+from django.urls.base import reverse_lazy
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -60,7 +64,9 @@ class AddressDetailView(DetailView):
 
 class AddressCreateView(CreateView):
     model = Address
-    template_name = 'quotes/address_create.html'
+    template_name = 'quotes/address_create_form.html'
+    fields = ['street', 'city', 'state', 'zip_code']
+    success_url = reverse_lazy('address_list')
 
 
 # class AddressDetail(APIView):

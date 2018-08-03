@@ -1,0 +1,16 @@
+{% extends "quotes/base.html" %}
+{% load rest_framework %}
+
+
+{% block content %}
+
+<h1>Enter new property features:</h1>
+
+<form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    {{ form.address_pk}}
+    <input type="submit" value="Save">
+</form>
+
+{% endblock %}

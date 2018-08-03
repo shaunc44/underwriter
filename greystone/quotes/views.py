@@ -29,7 +29,12 @@ from quotes.models import (
     Address, Rent, Expense, CapRate, Result
 )
 
-class AddressViewSet(viewsets.ModelViewSet):
+
+"""
+Address Views both API and HTML
+"""
+
+class AddressesViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows Addresses to be viewed or edited.
     """
@@ -43,11 +48,11 @@ class AddressViewSet(viewsets.ModelViewSet):
 #         serializer = AddressSerializer()
 #         return Response({'serializer': serializer})
 
+
 class AddressListView(ListView):
     model = Address
     queryset = Address.objects.all().order_by('street')
     template_name = 'quotes/address_list.html'
-
 
     # def get_queryset(self, *args, **kwargs):
     #     queryset = Address.objects.all()
@@ -72,9 +77,41 @@ class AddressCreateView(CreateView):
         'zip_code'
     ]
 
-    # pk = self.object.pk
+    def get_success_url(self):
+        # success_url = reverse_lazy('rent_create', pk)
+        success_url = reverse_lazy(
+            'expense_create', 
+            kwargs={'pk': self.object.pk}
+        )
+        return success_url
+
+
+"""
+Expense Views both API and HTML
+"""
+
+class ExpenseViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows Expenses to be viewed or edited.
+    """
+    queryset = Expense.objects.all().order_by('address')
+    serializer_class = ExpenseSerializer
+    template_name = 'quotes/input.html'
+
+
+class ExpenseCreateView(CreateView):
+    model = Expense
+    template_name = 'quotes/expense_create_form.html'
+    # address = address.id
+    fields = [
+        # 'address', 
+        'marketing', 
+        'taxes', 
+        'insurance',
+        'repairs',
+        'administration',
+    ]
     # success_url = reverse_lazy('rent_create')
-    # success_url = reverse_lazy('rent_create', {'id': self.object.pk})
     def get_success_url(self):
         # success_url = reverse_lazy('rent_create', pk)
         success_url = reverse_lazy(
@@ -82,6 +119,11 @@ class AddressCreateView(CreateView):
             kwargs={'pk': self.object.pk}
         )
         return success_url
+
+    def form_valid(self, form):
+        # form.instance.owner = self.request.user
+        form.instance.address_id = self.kwargs['pk']
+        return super(ExpenseCreateView, self).form_valid(form)
 
 
 class RentViewSet(viewsets.ModelViewSet):
@@ -117,15 +159,6 @@ class RentCreateView(CreateView):
         # form.instance.owner = self.request.user
         form.instance.address_id = self.kwargs['pk']
         return super(RentCreateView, self).form_valid(form)
-
-
-class ExpenseViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint that allows Expenses to be viewed or edited.
-    """
-    queryset = Expense.objects.all().order_by('address')
-    serializer_class = ExpenseSerializer
-    template_name = 'quotes/input.html'
 
 
 class CapRateViewSet(viewsets.ModelViewSet):

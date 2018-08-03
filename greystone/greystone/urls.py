@@ -25,7 +25,7 @@ from quotes import views
 
 
 router = routers.DefaultRouter()
-router.register(r'address', views.AddressViewSet)
+router.register(r'addresses', views.AddressesViewSet)
 router.register(r'rent', views.RentViewSet)
 router.register(r'expense', views.ExpenseViewSet)
 router.register(r'caprate', views.CapRateViewSet)
@@ -58,6 +58,11 @@ urlpatterns = [
         'address-create/', 
         views.AddressCreateView.as_view(),
         name='address_create'
+    ),
+    path(
+        'expense-create/<int:pk>/', 
+        views.ExpenseCreateView.as_view(),
+        name='expense_create'
     ),
     # re_path(
     #     r'rent-create/(?P<pk>[0-9]+)/$', 

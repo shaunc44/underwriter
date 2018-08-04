@@ -14,7 +14,9 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import generics
 from rest_framework.reverse import reverse
-from rest_framework.decorators import api_view, list_route, detail_route
+from rest_framework.decorators import (
+    api_view, list_route, detail_route
+)
 from rest_framework.reverse import reverse
 # from rest_framework.decorators import action
 
@@ -33,14 +35,13 @@ from quotes.models import (
 """
 Address Views both API and HTML
 """
-
 class AddressesViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows Addresses to be viewed or edited.
     """
     queryset = Address.objects.all().order_by('street')
     serializer_class = AddressSerializer
-    template_name = 'quotes/address.html'
+    # template_name = 'quotes/address.html'
 
 #     @list_route(renderer_classes=[TemplateHTMLRenderer])
 #     def blank_form(self, request, *args, **kwargs):
@@ -89,22 +90,19 @@ class AddressCreateView(CreateView):
 """
 Expense Views both API and HTML
 """
-
 class ExpenseViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows Expenses to be viewed or edited.
     """
     queryset = Expense.objects.all().order_by('address')
     serializer_class = ExpenseSerializer
-    template_name = 'quotes/input.html'
+    # template_name = 'quotes/input.html'
 
 
 class ExpenseCreateView(CreateView):
     model = Expense
     template_name = 'quotes/expense_create_form.html'
-    # address = address.id
     fields = [
-        # 'address', 
         'marketing', 
         'taxes', 
         'insurance',
@@ -115,7 +113,7 @@ class ExpenseCreateView(CreateView):
     def get_success_url(self):
         # success_url = reverse_lazy('rent_create', pk)
         success_url = reverse_lazy(
-            'rent_create', 
+            'cap_rate_create', 
             kwargs={'pk': self.object.pk}
         )
         return success_url
@@ -124,6 +122,32 @@ class ExpenseCreateView(CreateView):
         # form.instance.owner = self.request.user
         form.instance.address_id = self.kwargs['pk']
         return super(ExpenseCreateView, self).form_valid(form)
+
+
+class CapRateViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows CapRates to be viewed or edited.
+    """
+    queryset = CapRate.objects.all().order_by('address')
+    serializer_class = CapRateSerializer
+    # template_name = 'quotes/input.html'
+
+
+class CapRateCreateView(CreateView):
+    model = CapRate
+    template_name = 'quotes/caprate_create_form.html'
+    fields = ['cap_rate']
+
+    def get_success_url(self):
+        success_url = reverse_lazy(
+            'rent_create', 
+            kwargs={'pk': self.object.pk}
+        )
+        return success_url
+
+    def form_valid(self, form):
+        form.instance.address_id = self.kwargs['pk']
+        return super(CapRateCreateView, self).form_valid(form)
 
 
 class RentViewSet(viewsets.ModelViewSet):
@@ -159,15 +183,6 @@ class RentCreateView(CreateView):
         # form.instance.owner = self.request.user
         form.instance.address_id = self.kwargs['pk']
         return super(RentCreateView, self).form_valid(form)
-
-
-class CapRateViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint that allows CapRates to be viewed or edited.
-    """
-    queryset = CapRate.objects.all().order_by('address')
-    serializer_class = CapRateSerializer
-    template_name = 'quotes/input.html'
 
 
 class ResultList(generics.ListCreateAPIView):

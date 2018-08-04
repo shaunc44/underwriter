@@ -64,6 +64,11 @@ urlpatterns = [
         views.ExpenseCreateView.as_view(),
         name='expense_create'
     ),
+    path(
+        'cap-rate-create/<int:pk>/', 
+        views.CapRateCreateView.as_view(),
+        name='cap_rate_create'
+    ),
     # re_path(
     #     r'rent-create/(?P<pk>[0-9]+)/$', 
     #     views.RentCreateView.as_view(),

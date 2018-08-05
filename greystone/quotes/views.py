@@ -114,7 +114,7 @@ class ExpenseCreateView(CreateView):
         # success_url = reverse_lazy('rent_create', pk)
         success_url = reverse_lazy(
             'cap_rate_create', 
-            kwargs={'pk': self.object.pk}
+            kwargs={'pk': self.object.address.id}
         )
         return success_url
 
@@ -141,7 +141,7 @@ class CapRateCreateView(CreateView):
     def get_success_url(self):
         success_url = reverse_lazy(
             'rent_create', 
-            kwargs={'pk': self.object.pk}
+            kwargs={'pk': self.object.address.id}
         )
         return success_url
 

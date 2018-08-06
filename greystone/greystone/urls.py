@@ -79,15 +79,30 @@ urlpatterns = [
         views.RentCreateView.as_view(),
         name='rent_create'
     ),
-    path(
-        'results/', 
-        views.ResultList.as_view(),
-        name='results-list',
-    ),
+    # path(
+    #     'result/<int:pk>/', 
+    #     views.ResultDetailView.as_view(),
+    #     name='result_detail'
+    # ),
+    # path(
+    #     'result/<int:pk>/', 
+    #     views.ResultDetailView.as_view(),
+    #     name='result_detail'
+    # ),
     re_path(
-        r'^results/(?P<pk>[0-9]+)/$', 
-        views.ResultDetail.as_view()
+        r'^result/(?P<pk>[0-9]+)/$', 
+        views.ResultDetailView.as_view(),
+        name='result_detail'
     ),
+    # path(
+    #     'results/', 
+    #     views.ResultListView.as_view(),
+    #     name='results-list',
+    # ),
+    # re_path(
+    #     r'^results/(?P<pk>[0-9]+)/$', 
+    #     views.ResultDetail.as_view()
+    # ),
 ]
 
 # urlpatterns = format_suffix_patterns(urlpatterns)

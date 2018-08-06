@@ -1,0 +1,20 @@
+{% extends "quotes/base.html" %}
+{% load rest_framework %}
+
+
+{% block content %}
+
+    <h1>Quote Details:</h1>
+    <p><strong>Property Annual Rent:</strong> {{ property_annual_rent }}</p>
+
+{% endblock %}
+
+
+{% comment %}
+<p><strong>City:</strong> {{ address.city }}</p>
+<p><strong>State:</strong> {{ address.state }}</p> 
+<p><strong>Zip:</strong> {{ address.zip_code }}</p>  
+{% endcomment %}
+
+
+

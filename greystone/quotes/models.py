@@ -124,6 +124,10 @@ class Result(models.Model):
         default=1,
         on_delete=models.CASCADE,
     )
+    # property_annual_rent = models.PositiveIntegerField(
+    #     "annual Rent of Property",
+    #     default=0,
+    # )
     loan_amount = models.PositiveIntegerField(
         "loan Amount",
         default=0,
@@ -133,14 +137,14 @@ class Result(models.Model):
         default=0,
     )
 
-    # @property
-    # def annual_building_rent(self):
-    #     monthly_bldg_rent = Rent.objects.filter(address=address).aggregate(Sum('monthly_rent'))
-    #     annual_bldg_rent = monthly_bldg_rent * 12
-    #     return annual_bldg_rent
+    @property
+    def property_annual_rent(self):
+        monthly_bldg_rent = Rent.objects.filter(address=self.address.id).aggregate(Sum('monthly_rent'))
+        annual_bldg_rent = monthly_bldg_rent * 12
+        return annual_bldg_rent
 
-    def get_noi(self):
-        pass
+    # def get_noi(self):
+    #     pass
 
 
 

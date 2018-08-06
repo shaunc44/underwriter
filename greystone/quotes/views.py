@@ -21,7 +21,7 @@ from rest_framework.reverse import reverse
 # from rest_framework.decorators import action
 
 from quotes.models import (
-    Address, Rent, Expense, CapRate
+    Address, Rent, Expense, CapRate, Result
 )
 from quotes.serializers import (
     AddressSerializer, RentSerializer,
@@ -177,7 +177,14 @@ class RentCreateView(CreateView):
         'bedrooms',
         'bathrooms',
     ]
-    success_url = reverse_lazy('address_list')
+
+    def get_success_url(self):
+        success_url = reverse_lazy(
+            'result_detail', 
+            kwargs={'pk': self.object.address.id}
+        )
+        return success_url
+    # success_url = reverse_lazy('result_detail')
 
     def form_valid(self, form):
         # form.instance.owner = self.request.user
@@ -185,16 +192,20 @@ class RentCreateView(CreateView):
         return super(RentCreateView, self).form_valid(form)
 
 
-class ResultList(generics.ListCreateAPIView):
-    queryset = Result.objects.all().order_by('address')
-    serializer_class = ResultSerializer
-    template_name = 'quotes/output.html'
+# class ResultList(generics.ListCreateAPIView):
+#     queryset = Result.objects.all().order_by('address')
+#     serializer_class = ResultSerializer
+#     template_name = 'quotes/output.html'
 
 
-class ResultDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Result.objects.all().order_by('address')
-    serializer_class = ResultSerializer
-    template_name = 'quotes/output.html'
+class ResultDetailView(DetailView):
+    model = Result
+    template_name = 'quotes/result_detail.html'
+
+    # def form_valid(self, form):
+    #     # form.instance.owner = self.request.user
+    #     form.instance.address_id = self.kwargs['pk']
+    #     return super(ResultDetailView, self).form_valid(form)
 
     # def post(self, request, format=None):
     #     serializer = ResultSerializer(data=request.data)
@@ -203,20 +214,20 @@ class ResultDetail(generics.RetrieveUpdateDestroyAPIView):
     #         return Response(serializer.data, status=status.HTTP_201_CREATED)
     #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    @property
-    def annual_building_rent(self):
-        monthly_bldg_rent = Rent.objects.filter(address=address).aggregate(Sum('monthly_rent'))
-        annual_bldg_rent = monthly_bldg_rent * 12
-        return annual_bldg_rent
+    # @property
+    # def annual_building_rent(self):
+    #     monthly_bldg_rent = Rent.objects.filter(address=address).aggregate(Sum('monthly_rent'))
+    #     annual_bldg_rent = monthly_bldg_rent * 12
+    #     return annual_bldg_rent
 
 
 
-@api_view(['GET'])
-def api_root(request, format=None):
-    return Response({
-        # 'users': reverse('user-list', request=request, format=format),
-        'results': reverse('snippet-list', request=request, format=format)
-    })
+# @api_view(['GET'])
+# def api_root(request, format=None):
+#     return Response({
+#         # 'users': reverse('user-list', request=request, format=format),
+#         'results': reverse('snippet-list', request=request, format=format)
+#     })
 
 # class ResultDetail(APIView):
 #     """

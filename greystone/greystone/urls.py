@@ -80,20 +80,25 @@ urlpatterns = [
         name='rent_create'
     ),
     # path(
-    #     'result/<int:pk>/', 
+    #     'result/', 
     #     views.ResultDetailView.as_view(),
     #     name='result_detail'
     # ),
-    # path(
-    #     'result/<int:pk>/', 
-    #     views.ResultDetailView.as_view(),
-    #     name='result_detail'
-    # ),
-    re_path(
-        r'^result/(?P<pk>[0-9]+)/$', 
+    path(
+        'result-list/', 
+        views.ResultListView.as_view(),
+        name='result_list'
+    ),
+    path(
+        'result/<int:pk>/', 
         views.ResultDetailView.as_view(),
         name='result_detail'
     ),
+    # re_path(
+    #     r'^result/(?P<pk>[0-9]+)/$', 
+    #     views.ResultDetailView.as_view(),
+    #     name='result_detail'
+    # ),
     # path(
     #     'results/', 
     #     views.ResultListView.as_view(),

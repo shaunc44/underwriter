@@ -20,9 +20,6 @@ from rest_framework.decorators import (
 from rest_framework.reverse import reverse
 # from rest_framework.decorators import action
 
-from quotes.models import (
-    Address, Rent, Expense, CapRate, Result
-)
 from quotes.serializers import (
     AddressSerializer, RentSerializer,
     ExpenseSerializer, CapRateSerializer, ResultSerializer
@@ -180,16 +177,24 @@ class RentCreateView(CreateView):
 
     def get_success_url(self):
         success_url = reverse_lazy(
-            'result_detail', 
-            kwargs={'pk': self.object.address.id}
+            'address_list', 
+            # 'result_detail',
+            # kwargs={'pk': self.object.id}
         )
+        r = Result(address_id=self.object.address.id)
+        r.save()
         return success_url
-    # success_url = reverse_lazy('result_detail')
 
     def form_valid(self, form):
         # form.instance.owner = self.request.user
         form.instance.address_id = self.kwargs['pk']
         return super(RentCreateView, self).form_valid(form)
+
+    # r = Result(address_id=pk)
+    # r.save()
+
+
+    # form.fields['field'].widget.attrs['readonly'] = True
 
 
 # class ResultList(generics.ListCreateAPIView):
@@ -198,9 +203,25 @@ class RentCreateView(CreateView):
 #     template_name = 'quotes/output.html'
 
 
+class ResultListView(ListView):
+    model = Result
+    queryset = Result.objects.all()
+    template_name = 'quotes/result_list.html'
+
+
 class ResultDetailView(DetailView):
+    # print ("You are in the ResultDetailView")
     model = Result
     template_name = 'quotes/result_detail.html'
+
+    # r = Result(address_id=pk)
+    # r.save()
+
+    # queryset = Result.objects.all()
+
+    # def get_queryset(self):
+    #     """Filter by address"""
+    #     return self.queryset.filter(address_id=self.kwargs['pk'])
 
     # def form_valid(self, form):
     #     # form.instance.owner = self.request.user

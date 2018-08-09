@@ -1,19 +1,49 @@
 {% extends "quotes/base.html" %}
 {% load rest_framework %}
+{% load humanize %}
 
 
 {% block content %}
 
-    <h1>Quote for: {{ result.address.street }}</h1>
-    <p><strong>Annual Property Rent:</strong> {{ result.annual_property_rent }}</p>
-    <p><strong>Annual Property Expense:</strong> {{ result.get_annual_property_expense }}</p>
-    <p><strong>Net Operating Income:</strong> {{ result.noi }}</p>
-    <p><strong>Capitalization Rate:</strong> {{ result.get_cap_rate }}</p>
-    <p><strong>Debt Rate (as of 8/5/18):</strong> {{ result.debt_rate }}</p>
-    <p><strong>Debt Payment (assuming DSCR = 1.25):</strong> {{ result.debt_payment }}</p>
-    <p><strong>Property Value:</strong> {{ result.property_value }}</p>
-    <p><strong>Loan Amount (DSCR approach):</strong> {{ result.dscr_loan_amount }}</p>
-    <p><strong>Actual Loan Amount (lesser of Value or DSCR approach):</strong> {{ result.loan_amount }}</p>
+    <h1>
+        Quote for: {{ result.address.street }}
+    </h1>
+    <p>
+        <strong>Annual Property Rent:</strong>
+        ${{ result.annual_property_rent|intcomma }}
+    </p>
+    <p>
+        <strong>Annual Property Expense:</strong>
+        ${{ result.get_annual_property_expense|intcomma }}
+    </p>
+    <p>
+        <strong>Net Operating Income:</strong>
+        ${{ result.noi|intcomma }}
+    </p>
+    <p>
+        <strong>Capitalization Rate:</strong>
+        {{ result.get_cap_rate }}%
+    </p>
+    <p>
+        <strong>Debt Rate (as of 8/5/18):</strong>
+        {{ result.debt_rate }}%
+    </p>
+    <p>
+        <strong>Debt Payment (assuming DSCR = 1.25):</strong>
+        ${{ result.debt_payment|intcomma }}
+    </p>
+    <p>
+        <strong>Property Value:</strong>
+        ${{ result.property_value|intcomma }}
+    </p>
+    <p>
+        <strong>Loan Amount (DSCR approach):</strong>
+        ${{ result.dscr_loan_amount|intcomma }}
+    </p>
+    <p>
+        <strong>Actual Loan Amount (lesser of Value or DSCR approach):</strong>
+        ${{ result.loan_amount|intcomma }}
+    </p>
 
 {% endblock %}
 

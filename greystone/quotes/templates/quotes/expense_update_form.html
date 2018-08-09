@@ -1,0 +1,18 @@
+{% extends "quotes/base.html" %}
+{% load rest_framework %}
+
+
+{% block content %}
+
+<h1>Update property expenses:</h1>
+
+<form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Update">
+</form>
+
+{% endblock %}
+
+
+

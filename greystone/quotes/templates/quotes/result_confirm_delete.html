@@ -1,0 +1,15 @@
+{% extends "quotes/base.html" %}
+{% load rest_framework %}
+
+
+{% block content %}
+
+<form method="post">{% csrf_token %}
+    <p>Are you sure you want to delete "{{ object.address }}"?</p>
+    <input type="submit" value="Confirm">
+</form>
+
+{% endblock %}
+
+
+

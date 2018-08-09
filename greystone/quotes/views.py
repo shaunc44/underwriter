@@ -2,7 +2,9 @@ from django.shortcuts import get_object_or_404
 from django.shortcuts import redirect
 from django.http import Http404
 from django.http import HttpResponse
-from django.views.generic import ListView, DetailView, CreateView
+from django.views.generic import (
+    ListView, DetailView, CreateView, DeleteView, UpdateView
+)
 from django.urls.base import reverse_lazy
 from django.db.models.query import QuerySet
 
@@ -30,7 +32,7 @@ from quotes.models import (
 
 
 """
-Address Views both API and HTML
+Address Views for API and HTML
 """
 class AddressesViewSet(viewsets.ModelViewSet):
     """
@@ -38,26 +40,12 @@ class AddressesViewSet(viewsets.ModelViewSet):
     """
     queryset = Address.objects.all().order_by('street')
     serializer_class = AddressSerializer
-    # template_name = 'quotes/address.html'
-
-#     @list_route(renderer_classes=[TemplateHTMLRenderer])
-#     def blank_form(self, request, *args, **kwargs):
-#         # address = get_object_or_404(Address)
-#         serializer = AddressSerializer()
-#         return Response({'serializer': serializer})
 
 
 class AddressListView(ListView):
     model = Address
     queryset = Address.objects.all().order_by('street')
     template_name = 'quotes/address_list.html'
-
-    # def get_queryset(self, *args, **kwargs):
-    #     queryset = Address.objects.all()
-    #     # addresses = self.get_queryset()
-    #     return HttpResponse(
-    #         {'address_list': queryset}
-    #     )
 
 
 class AddressDetailView(DetailView):
@@ -84,6 +72,26 @@ class AddressCreateView(CreateView):
         return success_url
 
 
+class AddressUpdateView(UpdateView):
+    model = Address
+    # template_name_suffix = '_update_form'
+    template_name = 'quotes/address_update_form.html'
+    fields = [
+        'street', 
+        'city', 
+        'state', 
+        'zip_code'
+    ]
+
+    def get_success_url(self):
+        # success_url = reverse_lazy('rent_create', pk)
+        success_url = reverse_lazy(
+            'expense_update', 
+            kwargs={'pk': self.object.pk}
+        )
+        return success_url
+
+
 """
 Expense Views both API and HTML
 """
@@ -93,7 +101,6 @@ class ExpenseViewSet(viewsets.ModelViewSet):
     """
     queryset = Expense.objects.all().order_by('address')
     serializer_class = ExpenseSerializer
-    # template_name = 'quotes/input.html'
 
 
 class ExpenseCreateView(CreateView):
@@ -121,13 +128,38 @@ class ExpenseCreateView(CreateView):
         return super(ExpenseCreateView, self).form_valid(form)
 
 
+class ExpenseUpdateView(UpdateView):
+    model = Expense
+    # template_name_suffix = '_update_form'
+    template_name = 'quotes/expense_update_form.html'
+    fields = [
+        'marketing', 
+        'taxes', 
+        'insurance',
+        'repairs',
+        'administration',
+    ]
+
+    def get_success_url(self):
+        # success_url = reverse_lazy('rent_create', pk)
+        success_url = reverse_lazy(
+            'cap_rate_update', 
+            kwargs={'pk': self.object.address.id}
+        )
+        return success_url
+
+    def form_valid(self, form):
+        # form.instance.owner = self.request.user
+        form.instance.address_id = self.kwargs['pk']
+        return super(ExpenseUpdateView, self).form_valid(form)
+
+
 class CapRateViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows CapRates to be viewed or edited.
     """
     queryset = CapRate.objects.all().order_by('address')
     serializer_class = CapRateSerializer
-    # template_name = 'quotes/input.html'
 
 
 class CapRateCreateView(CreateView):
@@ -147,6 +179,25 @@ class CapRateCreateView(CreateView):
         return super(CapRateCreateView, self).form_valid(form)
 
 
+class CapRateUpdateView(UpdateView):
+    model = CapRate
+    # template_name_suffix = '_update_form'
+    template_name = 'quotes/caprate_update_form.html'
+    fields = ['cap_rate']
+
+    def get_success_url(self):
+        # success_url = reverse_lazy('rent_create', pk)
+        success_url = reverse_lazy(
+            'rent_update', 
+            kwargs={'pk': self.object.address.id}
+        )
+        return success_url
+
+    def form_valid(self, form):
+        form.instance.address_id = self.kwargs['pk']
+        return super(CapRateUpdateView, self).form_valid(form)
+
+
 class RentViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows Rents to be viewed or edited.
@@ -154,12 +205,6 @@ class RentViewSet(viewsets.ModelViewSet):
     queryset = Rent.objects.all().order_by('address')
     serializer_class = RentSerializer
     template_name = 'quotes/rent.html'
-
-    # @list_route(renderer_classes=[TemplateHTMLRenderer])
-    # def blank_form(self, request, *args, **kwargs):
-    #     # address = get_object_or_404(Address)
-    #     serializer = RentSerializer()
-    #     return Response({'serializer': serializer})
 
 
 class RentCreateView(CreateView):
@@ -176,7 +221,7 @@ class RentCreateView(CreateView):
     def get_success_url(self):
         if 'finish' in self.request.POST:
             success_url = reverse_lazy(
-                'address_list'
+                'result_list'
             )
         else:
             success_url = reverse_lazy(
@@ -228,47 +273,62 @@ class RentCreateView(CreateView):
     # form.fields['field'].widget.attrs['readonly'] = True
 
 
-# class RentUpdateView(UpdateView):
-#     model = Rent
-#     template_name = 'quotes/rent_update_form.html'
-#     fields = [
-#         'monthly_rent', 
-#         'unit_number', 
-#         'vacancy',
-#         'bedrooms',
-#         'bathrooms',
-#     ]
+class RentUpdateView(UpdateView):
+    model = Rent
+    template_name = 'quotes/rent_update_form.html'
+    fields = [
+        'monthly_rent', 
+        'unit_number', 
+        'vacancy',
+        'bedrooms',
+        'bathrooms',
+    ]
 
-#     def get_success_url(self):
-#         if 'finish' in self.request.POST:
-#             success_url = reverse_lazy(
-#                 'address_list'
-#             )
-#         else:
-#             success_url = reverse_lazy(
-#                 'rent_create', 
-#                 kwargs={'pk': self.object.address.id}
-#             )
+    def get_success_url(self):
+        if 'finish' in self.request.POST:
+            success_url = reverse_lazy(
+                'result_list'
+            )
+        elif 'update_rent' in self.request.POST:
+            success_url = reverse_lazy(
+                'rent_update', 
+                kwargs={'pk': self.object.address.id}
+            )
+        elif 'delete_rent_unit' in self.request.POST:
+            success_url = reverse_lazy(
+                'rent_update', 
+                kwargs={'pk': self.object.address.id}
+            )
+        else:
+            success_url = reverse_lazy(
+                'rent_create', 
+                kwargs={'pk': self.object.address.id}
+            )
 
-#         # r = Result(address_id=self.object.address.id)
-#         # r.save()
-#         return success_url
+        # r = Result(address_id=self.object.address.id)
+        # r.save()
+        return success_url
 
-#     # def form_valid(self, form):
-#     #     # form.instance.owner = self.request.user
-#     #     form.instance.address_id = self.kwargs['pk']
-#     #     return super(RentCreateView, self).form_valid(form)
+    def form_valid(self, form):
+        form.instance.address_id = self.kwargs['pk']
+        return super(RentUpdateView, self).form_valid(form)
 
 #     def form_valid(self, form):
 #         # form.instance.owner = self.request.user
 #         form.instance.address_id = self.kwargs['pk']
 #         return super(RentCreateView, self).form_valid(form)
 
+class RentDeleteView(DeleteView):
+    model = Rent
 
-# class ResultList(generics.ListCreateAPIView):
-#     queryset = Result.objects.all().order_by('address')
-#     serializer_class = ResultSerializer
-#     template_name = 'quotes/output.html'
+    def get_success_url(self):
+        success_url = reverse_lazy(
+            'rent_update'
+        )
+        address = Address.objects.get(id=self.object.address.id)
+        address.delete()
+        return success_url
+
 
 class ResultListView(ListView):
     model = Result
@@ -280,8 +340,21 @@ class ResultDetailView(DetailView):
     model = Result
     template_name = 'quotes/result_detail.html'
 
-    # r = Result(address_id=pk)
-    # r.save()
+
+class ResultDeleteView(DeleteView):
+    model = Result
+    # success_url = reverse_lazy(
+    #     'result_list'
+    # )
+    def get_success_url(self):
+        success_url = reverse_lazy(
+            'result_list'
+        )
+        address = Address.objects.get(id=self.object.address.id)
+        address.delete()
+        return success_url
+
+
 
     # queryset = Result.objects.all()
 

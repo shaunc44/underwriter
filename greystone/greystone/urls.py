@@ -60,14 +60,29 @@ urlpatterns = [
         name='address_create'
     ),
     path(
+        'address/<int:pk>/update', 
+        views.AddressUpdateView.as_view(),
+        name='address_update'
+    ),
+    path(
         'expense-create/<int:pk>/', 
         views.ExpenseCreateView.as_view(),
         name='expense_create'
     ),
     path(
+        'expense/<int:pk>/update/', 
+        views.ExpenseUpdateView.as_view(),
+        name='expense_update'
+    ),
+    path(
         'cap-rate-create/<int:pk>/', 
         views.CapRateCreateView.as_view(),
         name='cap_rate_create'
+    ),
+    path(
+        'cap-rate-update/<int:pk>/update', 
+        views.CapRateUpdateView.as_view(),
+        name='cap_rate_update'
     ),
     # re_path(
     #     r'rent-create/(?P<pk>[0-9]+)/$', 
@@ -78,6 +93,16 @@ urlpatterns = [
         'rent-create/<int:pk>/', 
         views.RentCreateView.as_view(),
         name='rent_create'
+    ),
+    path(
+        'rent-update/<int:pk>/update', 
+        views.RentUpdateView.as_view(),
+        name='rent_update'
+    ),
+    path(
+        'rent-update/<int:pk>/delete/', 
+        views.RentDeleteView.as_view(),
+        name='rent_delete'
     ),
     # path(
     #     'result/', 
@@ -94,6 +119,16 @@ urlpatterns = [
         views.ResultDetailView.as_view(),
         name='result_detail'
     ),
+    path(
+        'result/<int:pk>/delete/', 
+        views.ResultDeleteView.as_view(),
+        name='result_delete'
+    ),
+    # path(
+    #     'result/<int:pk>/update/', 
+    #     views.ResultUpdateView.as_view(),
+    #     name='result_update'
+    # ),
     # re_path(
     #     r'^result/(?P<pk>[0-9]+)/$', 
     #     views.ResultDetailView.as_view(),

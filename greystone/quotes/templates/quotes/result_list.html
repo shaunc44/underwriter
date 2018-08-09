@@ -13,9 +13,12 @@
         <a href="{% url 'result_detail' result.pk %}">
             {{ result.address.street }},
             {{ result.address.city }},
-            {{ result.address.state }}
+            {{ result.address.state }},
+            {{ result.address.zip_code }}
         </a>
     </li>
+    <a href="{% url 'result_delete' result.pk %}">DELETE -</a>
+    <a href="{% url 'address_update' result.address.id %}">UPDATE</a>
     {% endfor %}
 </ul>
 {% else %}

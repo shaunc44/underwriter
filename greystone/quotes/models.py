@@ -24,6 +24,14 @@ class Address(models.Model):
         max_length=5,
     )
 
+    class Meta:
+        unique_together = [
+            "street", 
+            "city", 
+            "state", 
+            "zip_code"
+        ]
+
     def __str__(self):
         return self.street
 
@@ -69,6 +77,13 @@ class Rent(models.Model):
         default=0,
     )
 
+    class Meta:
+        unique_together = [
+            "address",
+            "monthly_rent", 
+            "unit_number", 
+        ]
+
     @property
     def get_annual_unit_rent(self):
         return self.monthly_rent * 12
@@ -84,6 +99,7 @@ class Expense(models.Model):
     """
     address = models.OneToOneField(
         Address,
+        unique=True,
         on_delete=models.CASCADE,
     )
     marketing = models.PositiveIntegerField(
@@ -122,6 +138,7 @@ class CapRate(models.Model):
     address = models.OneToOneField(
         Address,
         default=1,
+        unique=True,
         on_delete=models.CASCADE,
     )
     cap_rate = models.DecimalField(
@@ -135,8 +152,9 @@ class Result(models.Model):
     """
     Quotes for the commercial property entered
     """
-    address = models.ForeignKey(
+    address = models.OneToOneField(
         Address, 
+        unique=True,
         on_delete=models.CASCADE,
     )
     annual_property_rent = models.PositiveIntegerField(
@@ -204,7 +222,9 @@ class Result(models.Model):
 
     @property
     def get_dscr_loan_amount(self):
-        loan = ((self.debt_payment / 12) * (1 - (1 / (1 + (self.debt_rate / 12)) ** (10 * 12)))) / (self.debt_rate / 12)
+        loan = ((self.debt_payment / 12) * \
+            (1 - (1 / (1 + (self.debt_rate / 12)) ** (10 * 12)))) / \
+            (self.debt_rate / 12)
         return loan
 
     @property

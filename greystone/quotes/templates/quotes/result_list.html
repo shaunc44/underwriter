@@ -10,7 +10,11 @@
 <ul>
     {% for result in result_list %}
     <li class="addy">
-        <a href="{% url 'result_detail' result.pk %}">{{ result.address.street }}</a>
+        <a href="{% url 'result_detail' result.pk %}">
+            {{ result.address.street }},
+            {{ result.address.city }},
+            {{ result.address.state }}
+        </a>
     </li>
     {% endfor %}
 </ul>

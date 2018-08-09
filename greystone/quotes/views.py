@@ -165,9 +165,7 @@ class RentViewSet(viewsets.ModelViewSet):
 class RentCreateView(CreateView):
     model = Rent
     template_name = 'quotes/rent_create_form.html'
-    # address = address.id
     fields = [
-        # 'address', 
         'monthly_rent', 
         'unit_number', 
         'vacancy',
@@ -176,13 +174,20 @@ class RentCreateView(CreateView):
     ]
 
     def get_success_url(self):
-        success_url = reverse_lazy(
-            'address_list', 
-            # 'result_detail',
-            # kwargs={'pk': self.object.id}
+        if 'finish' in self.request.POST:
+            success_url = reverse_lazy(
+                'address_list'
+            )
+        else:
+            success_url = reverse_lazy(
+                'rent_create', 
+                kwargs={'pk': self.object.address.id}
+            )
+
+        obj, created = Result.objects.update_or_create(
+            address_id=self.object.address.id
         )
-        r = Result(address_id=self.object.address.id)
-        r.save()
+        # r.save()
         return success_url
 
     def form_valid(self, form):
@@ -190,18 +195,80 @@ class RentCreateView(CreateView):
         form.instance.address_id = self.kwargs['pk']
         return super(RentCreateView, self).form_valid(form)
 
+    # def form_valid(self, form):
+    #     # form.instance.owner = self.request.user
+    #     form.instance.address_id = self.kwargs['pk']
+    #     return super(RentCreateView, self).form_valid(form)
+
+    # def get_success_url(self):
+    #     success_url = reverse_lazy(
+    #         'address_list', 
+    #     )
+    #     r = Result(address_id=self.object.address.id)
+    #     r.save()
+    #     return success_url
+
+        # if form.is_valid():
+            # form.save()
+            # if 'list' in request.POST:
+            #     return returnedirect('list_url')
+            # else:
+            #     return redirect('detail_url')
+
+    # if form.is_valid():
+    #     form.save()
+    #     if 'list' in request.POST:
+    #         return returnedirect('list_url')
+    #     else:
+            # return redirect('detail_url')
+
     # r = Result(address_id=pk)
     # r.save()
 
-
     # form.fields['field'].widget.attrs['readonly'] = True
+
+
+# class RentUpdateView(UpdateView):
+#     model = Rent
+#     template_name = 'quotes/rent_update_form.html'
+#     fields = [
+#         'monthly_rent', 
+#         'unit_number', 
+#         'vacancy',
+#         'bedrooms',
+#         'bathrooms',
+#     ]
+
+#     def get_success_url(self):
+#         if 'finish' in self.request.POST:
+#             success_url = reverse_lazy(
+#                 'address_list'
+#             )
+#         else:
+#             success_url = reverse_lazy(
+#                 'rent_create', 
+#                 kwargs={'pk': self.object.address.id}
+#             )
+
+#         # r = Result(address_id=self.object.address.id)
+#         # r.save()
+#         return success_url
+
+#     # def form_valid(self, form):
+#     #     # form.instance.owner = self.request.user
+#     #     form.instance.address_id = self.kwargs['pk']
+#     #     return super(RentCreateView, self).form_valid(form)
+
+#     def form_valid(self, form):
+#         # form.instance.owner = self.request.user
+#         form.instance.address_id = self.kwargs['pk']
+#         return super(RentCreateView, self).form_valid(form)
 
 
 # class ResultList(generics.ListCreateAPIView):
 #     queryset = Result.objects.all().order_by('address')
 #     serializer_class = ResultSerializer
 #     template_name = 'quotes/output.html'
-
 
 class ResultListView(ListView):
     model = Result
@@ -210,7 +277,6 @@ class ResultListView(ListView):
 
 
 class ResultDetailView(DetailView):
-    # print ("You are in the ResultDetailView")
     model = Result
     template_name = 'quotes/result_detail.html'
 

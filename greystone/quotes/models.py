@@ -152,7 +152,6 @@ class Rent(models.Model):
     class Meta:
         unique_together = [
             "address",
-            "monthly_rent", 
             "unit_number", 
         ]
 

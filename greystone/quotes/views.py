@@ -146,6 +146,9 @@ class ExpenseUpdateView(UpdateView):
             'cap_rate_update', 
             kwargs={'pk': self.object.address.id}
         )
+        obj, created = Result.objects.update_or_create(
+            address_id=self.object.address.id
+        )
         return success_url
 
     def form_valid(self, form):
@@ -201,6 +204,9 @@ class CapRateUpdateView(UpdateView):
                 'rent_create',
                 kwargs={'pk': self.object.address.id}
             )
+        obj, created = Result.objects.update_or_create(
+            address_id=self.object.address.id
+        )
         return success_url
 
     # def form_valid(self, form):
@@ -249,36 +255,6 @@ class RentCreateView(CreateView):
         form.instance.address_id = self.kwargs['pk']
         return super(RentCreateView, self).form_valid(form)
 
-    # def form_valid(self, form):
-    #     # form.instance.owner = self.request.user
-    #     form.instance.address_id = self.kwargs['pk']
-    #     return super(RentCreateView, self).form_valid(form)
-
-    # def get_success_url(self):
-    #     success_url = reverse_lazy(
-    #         'address_list', 
-    #     )
-    #     r = Result(address_id=self.object.address.id)
-    #     r.save()
-    #     return success_url
-
-        # if form.is_valid():
-            # form.save()
-            # if 'list' in request.POST:
-            #     return returnedirect('list_url')
-            # else:
-            #     return redirect('detail_url')
-
-    # if form.is_valid():
-    #     form.save()
-    #     if 'list' in request.POST:
-    #         return returnedirect('list_url')
-    #     else:
-            # return redirect('detail_url')
-
-    # r = Result(address_id=pk)
-    # r.save()
-
     # form.fields['field'].widget.attrs['readonly'] = True
 
 
@@ -293,7 +269,6 @@ class RentUpdateView(UpdateView):
         'bathrooms',
     ]
 
-    # foreign key restraint is failing here
     def get_success_url(self):
         if 'finish' in self.request.POST:
             success_url = reverse_lazy(
@@ -301,14 +276,26 @@ class RentUpdateView(UpdateView):
             )
         # need to check if next rent exists somewhere in here *********
         elif 'update_rent' in self.request.POST:
-            success_url = reverse_lazy(
-                'rent_update', 
-                kwargs={'pk': self.object.pk+1}
-            )
+            current_rent_id = self.object.pk
+            print ("\nRent ID:", current_rent_id)
+            rent_roll = Rent.objects.filter(address=self.object.address)
+
+            if len(rent_roll) > 1:
+                for unit in rent_roll:
+                    if unit.id > current_rent_id:
+                        success_url = reverse_lazy(
+                            'rent_update', 
+                            kwargs={'pk': unit.id}
+                        )
+                        break # something is broken here or near here
+            else:
+                success_url = reverse_lazy(
+                    'result_list'
+                )
         elif 'delete_rent' in self.request.POST:
             success_url = reverse_lazy(
                 'rent_delete', 
-                kwargs={'pk': self.object.address.id}
+                kwargs={'pk': self.object.pk}
             )
         else:
             success_url = reverse_lazy(
@@ -316,29 +303,30 @@ class RentUpdateView(UpdateView):
                 kwargs={'pk': self.object.address.id}
             )
 
-        # r = Result(address_id=self.object.address.id)
-        # r.save()
+        obj, created = Result.objects.update_or_create(
+            address_id=self.object.address.id
+        )
         return success_url
 
-    def form_valid(self, form):
-        form.instance.address_id = self.kwargs['pk']
-        return super(RentUpdateView, self).form_valid(form)
+    # def form_valid(self, form):
+    #     form.instance.address_id = self.kwargs['pk']
+    #     return super(RentUpdateView, self).form_valid(form)
 
-#     def form_valid(self, form):
-#         # form.instance.owner = self.request.user
-#         form.instance.address_id = self.kwargs['pk']
-#         return super(RentCreateView, self).form_valid(form)
 
 class RentDeleteView(DeleteView):
     model = Rent
 
     def get_success_url(self):
-        success_url = reverse_lazy(
-            'rent_update',
-            kwargs={'pk': self.object.address.id}
-        )
-        # address = Address.objects.get(id=self.object.address.id)
-        # address.delete()
+        if self.object.pk+1:
+            success_url = reverse_lazy(
+                'rent_update',
+                kwargs={'pk': self.object.pk+1}
+            )
+        else:
+            success_url = reverse_lazy(
+                'rent_create',
+                kwargs={'pk': self.object.address.id}
+            )
         return success_url
 
 
@@ -366,6 +354,33 @@ class ResultDeleteView(DeleteView):
         address.delete()
         return success_url
 
+
+    # def form_valid(self, form):
+    #     # form.instance.owner = self.request.user
+    #     form.instance.address_id = self.kwargs['pk']
+    #     return super(RentCreateView, self).form_valid(form)
+
+    # def get_success_url(self):
+    #     success_url = reverse_lazy(
+    #         'address_list', 
+    #     )
+    #     r = Result(address_id=self.object.address.id)
+    #     r.save()
+    #     return success_url
+
+        # if form.is_valid():
+            # form.save()
+            # if 'list' in request.POST:
+            #     return returnedirect('list_url')
+            # else:
+            #     return redirect('detail_url')
+
+    # if form.is_valid():
+    #     form.save()
+    #     if 'list' in request.POST:
+    #         return returnedirect('list_url')
+    #     else:
+            # return redirect('detail_url')
 
 
     # queryset = Result.objects.all()

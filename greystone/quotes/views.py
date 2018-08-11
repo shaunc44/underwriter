@@ -8,6 +8,9 @@ from django.views.generic import (
 from django.urls.base import reverse_lazy
 from django.db.models.query import QuerySet
 
+from django.db import IntegrityError
+from django.http import HttpResponseRedirect
+
 from rest_framework import viewsets
 # from rest_framework.renderers import JSONRenderer
 from rest_framework.renderers import TemplateHTMLRenderer
@@ -250,10 +253,15 @@ class RentCreateView(CreateView):
         )
         return success_url
 
+    # This causes UNIQUE constraint failed problems when it's called
+    # from the rent update view
     def form_valid(self, form):
-        # form.instance.owner = self.request.user
-        form.instance.address_id = self.kwargs['pk']
-        return super(RentCreateView, self).form_valid(form)
+        try:
+            form.instance.address_id = self.kwargs['pk']
+            return super(RentCreateView, self).form_valid(form)
+        except IntegrityError:
+            return HttpResponseRedirect('quotes/result_list.html')
+            # fix this here
 
     # form.fields['field'].widget.attrs['readonly'] = True
 

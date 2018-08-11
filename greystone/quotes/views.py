@@ -288,6 +288,10 @@ class RentUpdateView(UpdateView):
                             kwargs={'pk': unit.id}
                         )
                         break # something is broken here or near here
+                    else:
+                        success_url = reverse_lazy(
+                            'result_list'
+                        )
             else:
                 success_url = reverse_lazy(
                     'result_list'

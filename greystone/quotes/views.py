@@ -3,13 +3,17 @@ from django.shortcuts import redirect
 from django.http import Http404
 from django.http import HttpResponse
 from django.views.generic import (
-    ListView, DetailView, CreateView, DeleteView, UpdateView
+    ListView, DetailView, CreateView, 
+    DeleteView, UpdateView, TemplateView
 )
+# from django.views.generic import TemplateView
 from django.urls.base import reverse_lazy
 from django.db.models.query import QuerySet
 
 from django.db import IntegrityError
-from django.http import HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect
+
+from django import forms
 
 from rest_framework import viewsets
 # from rest_framework.renderers import JSONRenderer
@@ -253,17 +257,37 @@ class RentCreateView(CreateView):
         )
         return success_url
 
-    # This causes UNIQUE constraint failed problems when it's called
-    # from the rent update view
     def form_valid(self, form):
         try:
             form.instance.address_id = self.kwargs['pk']
             return super(RentCreateView, self).form_valid(form)
         except IntegrityError:
-            return HttpResponseRedirect('quotes/result_list.html')
+            return HttpResponseRedirect('/rent-duplicate/')
+            # raise forms.ValidationError(
+            #     "Rent record already exists"
+            # )
+            # duplicate_record = True
+            # return duplicate_record
+            # return HttpResponseRedirect(
+            #     reverse(
+            #         'rent-create',
+            #         # duplicate_record
+            #         kwargs={
+            #             'pk': self.kwargs['pk'], 
+            #             'duplicate_record': duplicate_record
+            #         }
+            #     )
+            # )
+            # return redirect(
+            #     'result_list',
+            # )
+            # return HttpResponse("ERROR: Kumquat already exists!")
             # fix this here
 
     # form.fields['field'].widget.attrs['readonly'] = True
+
+class RentDuplicateView(TemplateView):
+    template_name = 'quotes/rent_duplicate.html'
 
 
 class RentUpdateView(UpdateView):

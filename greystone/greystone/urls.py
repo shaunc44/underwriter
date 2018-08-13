@@ -104,11 +104,11 @@ urlpatterns = [
         views.RentDeleteView.as_view(),
         name='rent_delete'
     ),
-    # path(
-    #     'result/', 
-    #     views.ResultDetailView.as_view(),
-    #     name='result_detail'
-    # ),
+    path(
+        'rent-duplicate/', 
+        views.RentDuplicateView.as_view(),
+        name='rent_duplicate'
+    ),
     path(
         'result-list/', 
         views.ResultListView.as_view(),

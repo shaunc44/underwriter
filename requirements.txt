@@ -2,8 +2,6 @@ beautifulsoup4==4.6.0
 certifi==2018.4.16
 chardet==3.0.4
 Django==2.0.5
-django-geojson==2.11.0
-django-leaflet==0.24.0
 django-modelcluster==4.1
 django-taggit==0.22.2
 django-treebeard==4.3
@@ -21,6 +19,5 @@ requests==2.19.1
 six==1.11.0
 Unidecode==0.4.21
 urllib3==1.23
-wagtail==2.1.1
 webencodings==0.5.1
 Willow==1.1

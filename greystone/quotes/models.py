@@ -18,6 +18,9 @@ All models have a one-to-one relationship with the Address model,
 except for the Result model, which has a many-to-one relationship 
 with Address.
 
+Also, propertymetrics.com was helpful in understanding the calculations - 
+https://www.propertymetrics.com/blog/2014/01/03/how-commercial-real-estate-loan-underwriting-works/
+
 Shaun Cox 8/14/18
 """
 

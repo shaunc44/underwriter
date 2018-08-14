@@ -13,6 +13,7 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+
 from django.contrib import admin
 from django.urls import path
 from django.urls import re_path
@@ -29,13 +30,9 @@ router.register(r'addresses', views.AddressesViewSet)
 router.register(r'rent', views.RentViewSet)
 router.register(r'expense', views.ExpenseViewSet)
 router.register(r'caprate', views.CapRateViewSet)
-# router.register(r'result', views.ResultViewSet))
 
 
 urlpatterns = [
-    # path('', 
-    #     include('quotes.urls')
-    # ),
     path('admin/', 
         admin.site.urls),
     path('api/', 
@@ -84,11 +81,6 @@ urlpatterns = [
         views.CapRateUpdateView.as_view(),
         name='cap_rate_update'
     ),
-    # re_path(
-    #     r'rent-create/(?P<pk>[0-9]+)/$', 
-    #     views.RentCreateView.as_view(),
-    #     name='rent_create'
-    # ),
     path(
         'rent-create/<int:pk>/', 
         views.RentCreateView.as_view(),
@@ -124,28 +116,7 @@ urlpatterns = [
         views.ResultDeleteView.as_view(),
         name='result_delete'
     ),
-    # path(
-    #     'result/<int:pk>/update/', 
-    #     views.ResultUpdateView.as_view(),
-    #     name='result_update'
-    # ),
-    # re_path(
-    #     r'^result/(?P<pk>[0-9]+)/$', 
-    #     views.ResultDetailView.as_view(),
-    #     name='result_detail'
-    # ),
-    # path(
-    #     'results/', 
-    #     views.ResultListView.as_view(),
-    #     name='results-list',
-    # ),
-    # re_path(
-    #     r'^results/(?P<pk>[0-9]+)/$', 
-    #     views.ResultDetail.as_view()
-    # ),
 ]
-
-# urlpatterns = format_suffix_patterns(urlpatterns)
 
 
 

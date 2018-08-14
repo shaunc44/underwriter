@@ -17,8 +17,18 @@
             {{ result.address.zip_code }}
         </a>
     </li>
-    <a href="{% url 'result_delete' result.pk %}">DELETE -</a>
-    <a href="{% url 'address_update' result.address.id %}">UPDATE</a>
+
+    {% comment %}
+    <form method="POST">
+        {% csrf_token %}
+        <input type="submit" name="update_quote" value="UPDATE">
+        <input type="submit" name="delete_quote" value="DELETE">
+    </form>
+    {% endcomment %}
+
+    <a href="{% url 'result_delete' result.pk %}" class="button1">DELETE</a>
+    <a href="{% url 'address_update' result.address.id %}" class="button2">UPDATE</a>
+
     {% endfor %}
 </ul>
 {% else %}

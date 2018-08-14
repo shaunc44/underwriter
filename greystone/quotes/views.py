@@ -10,6 +10,8 @@ from django.views.generic import (
 from django.urls.base import reverse_lazy
 from django.db.models.query import QuerySet
 
+from django.shortcuts import render
+
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 
@@ -262,7 +264,16 @@ class RentCreateView(CreateView):
             form.instance.address_id = self.kwargs['pk']
             return super(RentCreateView, self).form_valid(form)
         except IntegrityError:
-            return HttpResponseRedirect('/rent-duplicate/')
+            form.instance.address_id = self.kwargs['pk']
+            error_message = "Rent record already exists" 
+            return render(
+                self.request, 
+                # 'rent-create', 
+                'quotes/rent_create_form.html', 
+                {'error_message': error_message}
+            )
+
+            # return HttpResponseRedirect('/rent-duplicate/')
             # raise forms.ValidationError(
             #     "Rent record already exists"
             # )
@@ -367,9 +378,26 @@ class RentDeleteView(DeleteView):
 
 
 class ResultListView(ListView):
-    model = Result
+    model = Result 
     queryset = Result.objects.all()
     template_name = 'quotes/result_list.html'
+
+    def get_success_url(self):
+        if 'update_quote' in self.request.POST:
+            success_url = reverse_lazy(
+                'address_update',
+                kwargs={'pk': self.object.address.id}
+            )
+        else:
+            success_url = reverse_lazy(
+                'result_delete', 
+                kwargs={'pk': self.object.pk}
+            )
+
+        # obj, created = Result.objects.update_or_create(
+        #     address_id=self.object.address.id
+        # )
+        return success_url
 
 
 class ResultDetailView(DetailView):

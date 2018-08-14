@@ -6,12 +6,19 @@
 
 <h1>Enter unit features:</h1>
 
+{% if error_message %}
+    <p>{{ error_message }}</p>
+    <a href="javascript:history.back()">Back</a>
+{% else %}
+
 <form method="POST">
     {% csrf_token %}
     {{ form.as_p }}
-    <input type="submit" name="add_more_rent" value="Save and add another unit">
-    <input type="submit" name="finish" value="Save and finish">
+    <input type="submit" name="add_more_rent" value="Add another unit">
+    <input type="submit" name="finish" value="Finish">
 </form>
+
+{% endif %}
 
 {% endblock %}
 

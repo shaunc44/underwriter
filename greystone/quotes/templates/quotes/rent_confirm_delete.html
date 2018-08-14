@@ -5,7 +5,7 @@
 {% block content %}
 
 <form method="post">{% csrf_token %}
-    <p>Are you sure you want to delete "{{ object.address }} - {{ object.unit_number }}"?</p>
+    <p>Are you sure you want to delete "{{ object.address }} - Unit {{ object.unit_number }}"?</p>
     <input type="submit" value="Confirm">
 </form>
 

@@ -38,7 +38,7 @@ urlpatterns = [
     # ),
     path('admin/', 
         admin.site.urls),
-    path('', 
+    path('api/', 
         include(router.urls)
     ),
     path('api-auth/', 
@@ -49,8 +49,8 @@ urlpatterns = [
         views.AddressListView.as_view(),
         name='address_list'
     ),
-    re_path(
-        r'^address/(?P<pk>[0-9]+)/$', 
+    path(
+        'address/<int:pk>', 
         views.AddressDetailView.as_view(),
         name='address_detail'
     ),
@@ -110,7 +110,7 @@ urlpatterns = [
         name='rent_duplicate'
     ),
     path(
-        'result-list/', 
+        '', 
         views.ResultListView.as_view(),
         name='result_list'
     ),

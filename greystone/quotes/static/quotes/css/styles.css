@@ -5,13 +5,38 @@
     /*list-style-type: decimal;*/
 }
 
-/*.col-sm-2 {
-    margin-top: 40%;
-}*/
-
 .addy {
     list-style-type: decimal;
+    padding: 5px 0;
 }
+
+a.button1,
+a.button2 {
+    text-decoration: none;
+    border-radius: 0.25rem; 
+    border: 1px solid black; 
+    padding: 0.5rem 1rem; 
+    color: white;
+    padding: 5px 5px;
+}
+
+a.button1 {
+    background-color: red;
+    margin-right: 10px;
+}
+
+a.button2 {
+    background-color: green;
+}
+
+a.button1:hover {
+    background-color: darkred;
+}
+
+a.button2:hover {
+    background-color: darkgreen;
+}
+
 
 
 

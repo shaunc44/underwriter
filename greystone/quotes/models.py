@@ -3,12 +3,31 @@ from django.db.models import Avg, Count, Min, Sum
 from django.core.validators import MaxValueValidator, MinValueValidator
 
 
+"""
+This database consists of five models: Address, Expense, Caprate, 
+Rent and Result.
+
+The models reflect the workflow that I had envisioned 
+as users move through the UI, e.g.:
+1. User clicks 'create new quote',
+2. User enters address, then expense, then caprate and finally the rent roll.
+3. User clicks 'finish' which takes them to the home page. 
+4. Lastly, user clicks on 'current quotes' to see list of quotes and details.
+
+All models have a one-to-one relationship with the Address model, 
+except for the Result model, which has a many-to-one relationship 
+with Address.
+
+Shaun Cox 8/14/18
+"""
+
+
 class Address(models.Model):
     """
     Address of the commercial property
     """
     street = models.CharField(
-        "street Address",
+        "street",
         max_length=100,
     )
     city = models.CharField(
@@ -206,7 +225,6 @@ class Result(models.Model):
 
     @property
     def get_annual_property_rent(self):
-        # annual_property_rent = 25000
         annual_property_rent = Rent.objects. \
             filter(address=self.address). \
             aggregate(Sum('annual_unit_rent'))['annual_unit_rent__sum']
@@ -214,7 +232,6 @@ class Result(models.Model):
 
     @property
     def get_annual_property_expense(self):
-        # annual_property_expense = Expense.objects.filter(address=self.address)
         annual_property_expense = Expense.objects. \
             values_list('annual_expense', flat=True). \
             get(address=self.address)
@@ -222,7 +239,6 @@ class Result(models.Model):
 
     @property
     def get_cap_rate(self):
-        # cap_rate = Expense.objects.filter(address=self.address)
         cap_rate = CapRate.objects. \
             values_list('cap_rate', flat=True). \
             get(address=self.address)

@@ -1,5 +1,5 @@
 .sidebar-nav {
-    margin-top: 8vh;
+    margin-top: 75px;
     padding: 0;
     list-style: none;
     /*list-style-type: decimal;*/
@@ -8,12 +8,13 @@
 .addy {
     list-style-type: decimal;
     padding: 5px 0;
+    margin-top: 20px;
 }
 
 a.button1,
 a.button2 {
     text-decoration: none;
-    border-radius: 0.25rem; 
+    border-radius: 0.30rem; 
     border: 1px solid black; 
     padding: 0.5rem 1rem; 
     color: white;
@@ -22,7 +23,7 @@ a.button2 {
 
 a.button1 {
     background-color: red;
-    margin-right: 10px;
+    margin-right: 15px;
 }
 
 a.button2 {
@@ -37,6 +38,15 @@ a.button2:hover {
     background-color: darkgreen;
 }
 
-
+.footer {
+    font-family: cursive;
+    text-align: center;
+    border-top: none;
+    color: black;
+    position: absolute;
+    right: 0;
+    bottom: 1%;
+    left: 0;
+}
 
 

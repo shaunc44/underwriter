@@ -11,7 +11,7 @@ html5lib==1.0.1
 idna==2.7
 jsonfield==2.0.2
 l18n==2016.6.4
-Pillow==5.1.0
+Pillow==8.1.1
 psycopg2==2.7.4
 psycopg2-binary==2.7.4
 pytz==2018.4
